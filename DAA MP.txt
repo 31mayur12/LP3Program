@@ -1,0 +1,84 @@
+# one thread per row
+
+import threading
+
+# Define two matrices
+matrix1 = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+matrix2 = [
+    [9, 8, 7],
+    [6, 5, 4],
+    [3, 2, 1]
+]
+
+# Initialize a result matrix with zeros
+result = [[0, 0, 0] for _ in range(len(matrix1))]
+
+# Define a function to multiply a row
+def multiply_row(row_index):
+    for j in range(len(matrix2[0])):
+        for k in range(len(matrix2)):
+            result[row_index][j] += matrix1[row_index][k] * matrix2[k][j]
+
+# Create and start threads
+threads = []
+for i in range(len(matrix1)):
+    thread = threading.Thread(target=multiply_row, args=(i,))
+    threads.append(thread)
+    thread.start()
+
+# Wait for all threads to finish
+for thread in threads:
+    thread.join()
+
+# Print the result
+for row in result:
+    print(row)
+
+
+# One thread per cell
+
+import threading
+
+# Define two matrices
+matrix1 = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+matrix2 = [
+    [9, 8, 7],
+    [6, 5, 4],
+    [3, 2, 1]
+]
+
+# Initialize a result matrix with zeros
+result = [[0] * len(matrix2[0]) for _ in range(len(matrix1))]
+
+# Define a function to multiply a cell
+def multiply_cell(row, col):
+    value = 0
+    for k in range(len(matrix2)):
+        value += matrix1[row][k] * matrix2[k][col]
+    result[row][col] = value
+
+# Create and start threads for each cell
+threads = []
+for i in range(len(matrix1)):
+    for j in range(len(matrix2[0])):
+        thread = threading.Thread(target=multiply_cell, args=(i, j))
+        threads.append(thread)
+        thread.start()
+
+# Wait for all threads to finish
+for thread in threads:
+    thread.join()
+
+# Print the result
+for row in result:
+    print(row)
